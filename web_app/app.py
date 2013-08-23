@@ -183,8 +183,11 @@ class progress:
 class download:
 	def index(self,directory):
 		filename='../'+directory+'/'+directory+'.tar'
-		filename=os.path.abspath(filename)
-		return serve_file(filename, "application/x-download", "attachment")
+		if os.path.exists(filename):
+			filename=os.path.abspath(filename)
+			return serve_file(filename, "application/x-download", "attachment")
+			
+		else: return 'Simulation Incomplete, try again later!'	
     	index.exposed = True
 
 
