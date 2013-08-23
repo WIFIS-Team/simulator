@@ -1,0 +1,33 @@
+\documentclass[11pt,twoside]{article}
+\usepackage{times}
+\usepackage{graphicx}
+\usepackage{amssymb,amsmath,subcaption, hyperref}
+\usepackage[symbol]{footmisc}
+\usepackage[margin=1.0in]{geometry}
+\title{WIFIS Simulation of Spiral Galaxy Observations}
+\author{Miranda Jarvis}
+\date{\today}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+The beginings of simulating spiral galaxy, with focus on morphology, flux and emission lines in particular
+\end{abstract}
+
+To start with I took the line emission fluxes from ``A spectral atlas of H II galaxies in the near-infrared'' (Martins)\footnote{\url{http://mnras.oxfordjournals.org/content/suppl/2013/03/11/stt296.DC1}}. I used the values for NGC 2903 using the ``N2'' apperture (see table 4 of the Martins paper), this galaxy's morphology is SAB(rs)bc.
+
+To create the spatial image using galfit I looked through a paper published about galfit\footnote{\url{http://iopscience.iop.org/1538-3881/139/6/2097/pdf/aj_139_6_2097.pdf}}, which in table 5 gives the galfit parameters used to model NCG 289 which is also a SAB(rs)bc galaxy. The image they are fitting comes from the Carnegie-Irvine Galaxy Survey (CGS) and as far as I can tell from visual inspection the particular image is a colour composite image of B, V, R, I band images\footnote{\url{http://cgs.obs.carnegiescience.edu/CGS/object_html_pages/NGC289.html}}.
+
+Since we are simulating images in the Near infrared I looked for papers that had morphological fits to similar galaxies in the Near-IR (J or H band particularly) I also wanted the J-band magnitude out to one effective radius. I was able to find papers that had the information I wanted for NGC 289 in particular. The next few paragraphs will outline what I did and the sources I used in the end. 
+
+I found the J-band flux in the paper ``Dark and Baryonic Matter in Bright Spiral galaxies" (2005) Kassin\footnote{\url{http://iopscience.iop.org/0067-0049/162/1/80/fulltext/63054.text.html}}. It gave the flux as 8.81.
+
+For now I have scaled the flux of the disk and the bulge using thier relative magnitudes from the galfit paper. First I convert the J-band magnitude and magnitude of each componant in the galfit paper to flux and use the ratio of the bulge to disk flux from the galfit paper to scale the J-band flux before onverting back to magnitude. I did this using magnitude.py. in this code I also use equation 5 from ``a concise reference to (projected) sersic $R^{1/n}$ guantities, including concentration, profile slopes, petrosian indices and Kron magnitudes'' Graham to calculate the magnitude at one effective radius based off of the total magnitude which is what I found from the papers above.
+
+The Kassin paper also did a bulge/disk decomposition that calculated the scale length of the bulde and the disk respectively in the H band. Since this is likely the closer match to the J-band morphology I used the scale lengths from this paper as well as the sersic index for both the bulge and disk,  the spiral fit paramaters I tood directly from the galfit paper.
+
+For the spectrum of the bulge I used the same spectrum as for the ellipticals before (3 Gyr elliptical galaxy with solar metalicity and Chabrier IMF created using the CvD12 model). For the spiral arms I used the emission lines from the Martins paper which I converted into J/s/m$^2$/$\mu$m assuming that the units given were $erb/s/cm^2/\mu m$ even though they didn't specify the $/\mu m$ part but did say that they were giving $F_\lambda$ I then divided this by the area of the slit (0.8$\times$2arcesc) and added this to the same elliptical spectrum from above after scaling the spectrum first by the J-band magnitude out to one effective radius calculated above then dividing by the area in arcseconds out to one $R_e$
+
+
+\end{document}

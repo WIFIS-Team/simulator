@@ -1,0 +1,115 @@
+#Note1: When adding comments on the same line as parameters, make sure the comments follow AFTER the final parameter value, with a minimum separation of a white space.
+#Note2: I will refer to parameter names as parameters. I will refer to parameter elements as elements
+#Note3: Lines beginning with ! indicate parameters up to the next ! are the parameters in the !parameter_space
+
+!basis 
+
+
+INT_SKY			360   #seconds -- integration time for a single frame
+INT_SCI			360  #seconds -- integration time for a single frame
+NFRAMES_SKY			20      #Num sky frames
+NFRAMES_SCI			20       #Num science frames
+
+
+!psf #Multiple elements per psf parameter DO NOT require the generation of a full datacube.
+PSF_FWHM			2	#[arcsec] (1.5-2" seeing=fwhm)
+
+
+
+#####################################################################################################################
+#####################################################################################################################
+
+#Paramaters to use to construct object
+# note:_1 if not used set to 0!!!!!!!!!!
+!object_1
+LABEL			bulge	#what is it (name, one word)
+
+SPEC			elliptical_3.txt #name of spectrum file kept in dir OBJECT_FILE from basis-top (make sure has wavelength as fits column in nm and flux is in units of W/micrometer and extends past bandmax
+SIGMA			0	#FWHM of emission lines in given spectrum
+
+MJ			13.4 	#integrated J-band magnitude to effective radus
+
+#galfit paramaters:
+
+###basic
+#paramaters to be used to create light profile in galfit: 	
+TYPE			sersic	#Object name. The valid entries are: sersic, devauc, nuker, expdisk, moffat, gaussian, sky
+
+
+
+#the rest of the paramaters depend on which galfit object is used, see galfit documentation 
+v1_1			0  	#X  position of the galaxy from the centre of the detector in arcseconds positive is right negative is left Note cant be bigger than half fov
+v1_2			0	#Y  position of the galaxy from the centre of the detector in arcseconds positive is up negative is down cant be bigger than half fov
+
+
+v4			4	#scale length along semi-major axis in arcseconds (will be converted into pixels for galfit by code)
+
+v5			1.1	#For Sersic it is the concentration index n.For Nuker, it is the powerlaw. For King, it is the truncation radius beyond which the fluxes are 0. For all other functions it is ignored.
+
+v6			0	#For Nuker, it is the powerlaw , and for King, it is the powerlaw . For all other functions, this parameter is ignored.
+
+v7			0	#For Nuker, it is the powerlaw 
+
+v9			0.78	#The axis ratio is defined as semi-minor axis over the semi-major axis: for a circle this value is 1, for an ellipse this value is less than 1.
+
+v10			61.27	#The position angle (degrees) is 0 if the semi-major axis is aligned parallel to the Y-axis and increases toward the counter-clockwise direction.
+
+SPIRAL			0
+
+
+#########################################################
+
+!object_2
+LABEL			spiral_arms(2)	#what is it (name, one word)
+
+SPEC                    spiral_arms+continuum.txt #name of spectrum file kept in dir OBJECT_FILE from basis-top (make sure has wavelength as fits column in nm and flux is in units of W/micrometer
+SIGMA                   0       #FWHM of emission lines in given spectrum
+
+MJ                      9.9    #integrated J-band magnitude to effective radus
+
+
+###basic
+#paramaters to be used to create light profile in galfit:
+TYPE                       sersic  #Object name. The valid entries are: sersic, devauc, nuker, expdisk, moffat, gaussian, sky
+
+
+
+#the rest of the paramaters depend on which galfit object is used, see galfit documentation
+v1_1                    0      #X  position of the galaxy from the centre of the detector in arcseconds positive is right negative is left Note cant be bigger than half fov
+v1_2                    0      #Y  position of the galaxy from the centre of the detector in arcseconds positive is up negative is down cant be bigger than half fov
+
+
+v4                      18   #scale length along semi-major axis in arcseconds (will be converted into pixels for galfit by code)
+
+v5                     1        #For Sersic it is the concentration index n.For Nuker, it is the powerlaw . For King, it is the truncation radius beyond which the fluxes are 0. For all other fu
+
+v6                      0       #For Nuker, it is the powerlaw, and for King, it is the powerlaw . For all other functions, this parameter is ignored.
+
+v7                      0       #For Nuker, it is the powerlaw.
+
+v9                      0.56    #The axis ratio is defined as semi-minor axis over the semi-major axis: for a circle this value is 1, for an ellipse this value is less than 1.
+
+v10                     -32.85      #The position angle (degrees) is 0 if the semi-major axis is aligned parallel to the Y-axis and increases toward the counter-clockwise direction.
+
+
+#spiral
+SPIRAL			1
+
+r0                      power    #Coordinate rotation function type: The options are powerlog
+
+r1                      -26.32    #Inner (bar) radius: The radius at which (r) flattens off to 0, thus creating the appearance of a bar (see Figure 7). As Section 5 explains, theseful mathematical construct, and may or may not have any bearing on the physical bar.
+
+r2                      71.31   #Outer radius: The radius beyond which the functionr) behaves either like a pure power law or a pure logarithm (see Figure 7).
+
+r3                      450.01   #Total angular rotation out to outer radius: The total angular ro(r) = out log(r/rout ).
+
+r4                      0.77    #Asymptotic powerlaw tanh) or scale parameter (log-tanh): For
+
+r9                      53.3    #Inclination angle to line of sight: A face-on spiral can be inclined relative to the line of sight to appear more elliptical. Zero degrees is face on, whereas 90egrees is edge-on. Note that a 90 degree solution is not allowed, because it corresponds to an infinitesimally thin model
+
+r10                     140.24   #Position angle in the plane of the sky: An inclined spiral can be rotated in the plane of the sky to match the position angle of the galaxy. A zero degree PA is usually parallel to the x-axis, in contrast to the standard definition of the PA of an ellipsoid model.
+
+
+#########################################################
+
+

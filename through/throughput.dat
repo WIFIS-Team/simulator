@@ -1,0 +1,19 @@
+## WIFIS Throughput Prediction
+# Includes Telescope Reflectance (Al coated)
+# Includes Optical Losses Within Instrument
+# Includes Grating Efficiency
+# Includes Detector QE
+# 0 < Throughput < 1 where 1 is full transmittance
+# Wavelength (um)	Throughput
+     0.850000    	0.0670337
+     0.900000    	0.0874334
+     0.950000     	0.118089
+      1.00000     	0.162484
+      1.05000     	0.196335
+      1.10000     	0.223416
+      1.15000     	0.243727
+      1.20000     	0.264037
+      1.25000     	0.274942
+      1.30000     	0.287069
+      1.35000     	0.295894
+      1.40000     	0.301347

@@ -1,0 +1,68 @@
+HOME = '/home/miranda/files/WIFIS_sim/' #string
+
+#PARAM = 'spiral/' #name of directory to save runs in
+GALFIT = '/home/miranda/files/galaxyspec/galfit' #location of galfit executible file (aliases don't work)
+
+#Save/Inclusion of additional effects-parameters:
+#SAVE_OBJCUBE =	1 	#save initially created object cubes (one per componant)
+#SAVE_PSFCUBE =	1	#save initial data cube sum of all object cubes
+#SAVE_IND = 	1	#save sky and science cubes as well as final reduced cube
+
+################################################################################################################
+######probably won't have to change these:
+
+OBJECT_FILE =			HOME + 'object_spec/' #location of dir to keep all object spectra files in 
+
+PSPACE_FILE = 			HOME + 'paramspace.param'
+
+BASIS_TOP_TEMPLATEFILE = 	HOME + 'basis_top.param'
+BASIS_END_TEMPLATEFILE =	HOME + 'basis_end.param'
+
+TAIL = '.param'
+OBJ_PREFIX='object_'     #use to identify each of the objects in paramsapace.param
+
+THROUGHPUT_FILE =		HOME + 'through/throughput.dat'	
+
+BASIS_PREFIX = 'basis'
+PSF_PREFIX = 'psf_'
+NOISE_PREFIX = 'noise_'
+
+
+
+##################################################################################################################
+#################  Above is administrative stuff (naming conventions, directories,...)   #########################
+#################                         Below is for the simulation                    #########################
+##################################################################################################################
+
+
+DARK_CURRENT = 0.02 #electrons/pixel/second
+READ_NOISE = 5.0 #electrons/frame
+
+SLICE		=		1.1 #[arcsec/slice]
+YSCALE	=			0.44 #[arcsec/pix]
+MAXFOVX		=		19.8  #[arcseconds]
+MAXFOVY		=		50  #[arcseconds]
+	#if NX or NY change might mess up code . . .
+
+QE		=		0.76
+THERM		=		0.5 #[photon/sec/pix]
+COL_AREA	=		3.534
+
+WELL_DEPTH	=		100000 #well depth of detector [electrons] 
+
+
+SKY_TRAN	=		"30_15"  #GEMINI sky Transmission: WATER_VAPOUR_COLUMN[mm]_AIRMASS[mm]
+SKY_EM		=		"30_15"  #GEMINI sky Emission:     WATER_VAPOUR_COLUMN[mm]_AIRMASS[mm]
+
+RES		=		3000  # spectral resolution of wifis for now a number, change to an array at some point, then edit spectral convolution to load file first, add file path here
+
+LVEGA		=		3.01e-9 #flux density of vega
+
+JMIN		=		1160 #jband range (nm)
+
+JMAX		=		1360 #jband range (nm)
+
+
+
+MODSZ		=		0.25	#how many times bigger than MAXFOV to make the buffer zone on galfit model  (lower limit, buffer is applied to both sides)
+
