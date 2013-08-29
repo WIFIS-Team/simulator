@@ -7,7 +7,7 @@ import subprocess
 import pdb
 
 
-pathname='/home/miranda/files/WIFIS_sim/' #string
+pathname='/Users/suresh/Source/wifis_simulator/' #string
 
 path=os.path.abspath(pathname+'run_files/')
 sys.path.append(path)

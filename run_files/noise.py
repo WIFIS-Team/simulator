@@ -82,10 +82,6 @@ def ApplyNoise(cube, skySpectrum, object,  fileprefix, pid):
 		im=py.HDUList([im])
 		im.writeto(fileprefix+'saturation_map.fits',clobber=1)
 		
-	
-	
-	
-
 	#Final Subtracted Image:
 
 	sciCuber = sciCube/(INT_SCI*NFRAMES_SCI) - skyCube/(INT_SKY*NFRAMES_SKY) #Now electron/second
@@ -107,18 +103,3 @@ def ApplyNoise(cube, skySpectrum, object,  fileprefix, pid):
 		hdu_dict['PSFFWHM']=cube.hdu_dict['PSFFWHM']
 	sciCuber = datacube.Cube(cube.arcsx, cube.arcsy, cube.z, sciCuber, hdu_dict)
 	sciCuber.SaveFITS(fileprefix+'noise_psf_'+pid+'.fits')
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

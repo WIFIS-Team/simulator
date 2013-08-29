@@ -1,7 +1,7 @@
-HOME = '/home/miranda/files/WIFIS_sim/' #string
+HOME = '/Users/suresh/Source/wifis_simulator/' #string
 
 #PARAM = 'spiral/' #name of directory to save runs in
-GALFIT = '/home/miranda/files/galaxyspec/galfit' #location of galfit executible file (aliases don't work)
+GALFIT = '/Users/suresh/bin/galfit' #location of galfit executible file (aliases don't work)
 
 #Save/Inclusion of additional effects-parameters:
 #SAVE_OBJCUBE =	1 	#save initially created object cubes (one per componant)
