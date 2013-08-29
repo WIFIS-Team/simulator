@@ -14,41 +14,10 @@ import pdb
 class InputExample:
 
 	def index ( self ):
-		return "<form method='POST' action='RunCode'>\n"+\
-			"<h2>Enter Parameters for Desired Simulation </h2><br />\n" + \
-			"(if any parameters other than 'directory' left black, defualt values will be used)<br />\n" + \
-			" <br />\n" + \
-			"directory (*manditory): <input type='text' name='directory' /><br />\n" + \
-			"Optional FITS files to be saved, by defualt a sky subtracted science frame is saved:<br />\n" + \
-			"Save Individual Object Cubes <input type='checkbox' name='save' value='initCubes' /><br />\n" + \
-			"Save Sum of all Componants <input type='checkbox' name='save' value='sumCube' /><br />\n" + \
-			"Save Sky and Science Frames <input type='checkbox' name='save' value='skysci' /><br />\n" + \
-			"=============================================================================== <br />\n" + \
-			"Obervation Paramaters:<br />\n" + \
-			"Integration Time per Frame [sky] (seconds): <input type='text' name='intsky' /><br />\n" + \
-			"Number of Frames [sky] (seconds): <input type='text' name='nframesky' /><br />\n" + \
-			"Integration Time per Frame [sci] (seconds): <input type='text' name='intsci' /><br />\n" + \
-			"Number of Frames [sci] (seconds): <input type='text' name='nframesci' /><br />\n" + \
-			"Seeing (arcseconds): <select name='psffwhm'><option value='1.5'>1.5\"</option><option value='2'>2\"</option><option value='2.5'>2.5\"</option></select><br />\n" + \
-			"=============================================================================== <br />\n" + \
-			"Object Paramaters:<br />\n" + \
-			"label: <input type='text' name='label' /><br />\n" + \
-			"magnitude: <input type='text' name='magnitude' /><br />\n" + \
-			"Type: <select name='typef'><option value='sersic'>sersic</option><option value='devauc'>devauc</option><option value='nuker'>nuker</option><option value='expdisk'>expdisk</option><option value='moffat'>moffat</option><option value='gaussian'>gaussian</option></select><br />\n" + \
-			"Spectrum: <input type='text' name='spec' /><br />\n" + \
-			"X position: <input type='text' name='v1_1' /><br />\n" + \
-			"y position: <input type='text' name='v1_2' /><br />\n" + \
-			"Scale Length: <input type='text' name='v4' /><br />\n" + \
-			"variable parameter 1 (see explenation) <input type='text' name='v5' /><br />\n" + \
-			"variable parameter 2 (see explenation)  <input type='text' name='v6' /><br />\n" + \
-			"variable parameter 3 (see explenation)  : <input type='text' name='v7' /><br />\n" + \
-			"Axis Ratio: <input type='text' name='v9' /><br />\n" + \
-			"Position Angle: <input type='text' name='v10' /><br />\n" + \
-			"<input type='submit' value='start simulation' name='button' />\n" + \
-			"</form>\n" + \
-			"spectrum: <form action='RunCode' method='post' enctype='multipart/form-data'> <input type='file' multiple  name='specf' /><br />\n" + \
-			"<input type='submit' name='button' value='upload files' /><br />\n" +\
-     			"</form>"
+                # Read in HTML form code from file
+                htmlstring = open('inputform.html', 'r').read()
+
+		return(htmlstring)
 
 	def RunCode(self,button,specf=None,save=None,directory=None,intsky=None,intsci=None,nframesci=None,nframesky=None,psffwhm=None,magnitude=None,spec=None,label=None,typef=None,v1_1=None,v1_2=None,v4=None,v5=None,v6=None,v7=None,v9=None,v10=None):
 		if button=='start simulation':	

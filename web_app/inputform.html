@@ -1,0 +1,160 @@
+<html>
+<title>WIFIS Observation Simulator</title>
+
+<head>
+<script>
+function calcIntegration()
+{
+   skyt = document.getElementById("intsky").value;
+   skyn = document.getElementById("nframesky").value;
+   scit = document.getElementById("intsci").value;
+   scin = document.getElementById("nframesci").value;
+
+   if((skyt != "") && (skyn != ""))
+   {  
+      document.getElementById("skytotint").innerText = (parseInt(skyn)*parseFloat(skyt)/3600.0).toFixed(2);
+   } else 
+   {
+      document.getElementById("skytotint").innerText = "0";
+   }
+
+   if((scit != "") && (scin != ""))
+   {  
+      document.getElementById("scitotint").innerText = (parseInt(scin)*parseFloat(scit)/3600.0).toFixed(2);
+   } else 
+   {
+      document.getElementById("scitotint").innerText = "0";
+   }
+   
+}
+</script>
+
+<body>
+<form method='POST' action='RunCode'>
+<h1>WIFIS Observation Simulator</h1>		
+<h3>Enter Parameters for Desired Simulation:</h3>
+<i>If any parameters other than 'directory' left black, default values will be used</i><br />
+<br />
+
+<b>Directory:</b>
+<input type='text' name='directory' />&nbsp;
+<font color="red">*Required</font><br /><br />
+
+
+<b>Optional FITS files to be saved:</b><br />
+<table>
+<tr>
+<td>Save Individual Object Cubes</td> 
+<td><input type='checkbox' name='save' value='initCubes' /></td>
+</tr>
+<tr>
+<td>Save Sum of all Components </td>
+<td><input type='checkbox' name='save' value='sumCube' /></td>
+</tr>
+<tr>
+<td>Save Sky and Science Frames </td>
+<td><input type='checkbox' name='save' value='skysci' /></td>
+</tr>
+</table>
+<i>By default a sky subtracted science frame is saved.</i><br />
+<hr>
+
+<b>Observation Parameters:</b><br />
+<table>
+<tr>
+<td>Integration per Sky Frame:</td>
+<td><input type='text' name='intsky' id='intsky' onblur="calcIntegration()"/></td>
+<td>seconds</td>
+</tr>
+<tr>
+<td>Number of Sky Frames:</td> 
+<td><input type='text' name='nframesky' id='nframesky' onblur="calcIntegration()" /></td>
+<td></td>
+</tr>
+<tr>
+<td>Integration per Object Frame:</td>
+<td><input type='text' name='intsci' id='intsci' onblur="calcIntegration()"/></td>
+<td>seconds</td>
+</tr>
+<tr>
+<td>Number of Object Frames:</td> 
+<td><input type='text' name='nframesci' id='nframesci' onblur="calcIntegration()"/></td>
+<td><td>
+</tr>
+<tr>
+<td>Seeing:</td>
+<td><select name='psffwhm'>
+    <option value='1.0'>1.0</option>
+    <option selected='1.5'>1.5</option>
+    <option value='2.0'>2.0</option>
+    <option value='2.5'>2.5</option>
+  </select></td>
+<td>arcsec</td>
+</tr>
+<tr>
+<td><i>Total Sky Integration:</i></td><td id="skytotint">0</td><td>hrs</td>
+</tr>
+<tr>
+<td><i>Total Object Integration:</i></td><td id="scitotint">0</td><td>hrs</td>
+</tr>
+</table>
+<hr>
+
+<b>Object Parameters:</b><br />
+<table>
+<tr>
+<td>Label:</td> 
+<td><input type='text' name='label' /></td>
+</tr>
+<tr>
+<td>Magnitude:</td> 
+<td><input type='text' name='magnitude' /></td>
+</tr>
+<tr>
+<td>Type:</td> 
+<td><select name='typef'>
+    <option value='sersic'>sersic</option>
+    <option value='devauc'>devauc</option>
+    <option value='nuker'>nuker</option>
+    <option value='expdisk'>expdisk</option>
+    <option value='moffat'>moffat</option>
+    <option value='gaussian'>gaussian</option>
+  </select></td>
+</tr>
+<tr>
+<td>Spectrum:</td>
+<td><input type='text' name='spec' /></td>
+</tr>
+<tr>
+<td>X position:</td>
+<td><input type='text' name='v1_1' /></td>
+</tr>
+<tr>
+<td>Y position:</td>
+<td><input type='text' name='v1_2' /></td>
+</tr>
+<tr>
+<td>Scale Length:</td>
+<td><input type='text' name='v4' /></td>
+</tr>
+<!--
+variable parameter 1 (see explanation) <input type='text' name='v5' /><br />
+variable parameter 2 (see explanation)  <input type='text' name='v6' /><br />
+variable parameter 3 (see explanation)  : <input type='text' name='v7' /><br />
+-->
+<tr>
+<td>Axis Ratio:</td>
+<td><input type='text' name='v9' /></td>
+</tr>
+<tr>
+<td>Position Angle:</td> 
+<td><input type='text' name='v10' /></td>
+</tr>
+</table>
+<input type='submit' value='start simulation' name='button' />
+</form>
+spectrum: <form action='RunCode' method='post' enctype='multipart/form-data'> <input type='file' multiple  name='specf' /><br />
+<input type='submit' name='button' value='upload files' /><br />
+</form>
+</body>
+</html>
