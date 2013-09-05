@@ -1,4 +1,6 @@
-#try getting a form to work with free paramaters from code and run code from it
+#set up the web application for running the WIFIS simulator code, uses cherrypy and calls execute_sim.py to run simulation with user defined parameters
+#Miranda J
+#summer 2013
 
 import cherrypy
 import glob
@@ -14,14 +16,20 @@ import pdb
 class InputExample:
 
 	def index ( self ):
+		##home page, lets user set up conditions for simulation
                 # Read in HTML form code from file
                 htmlstring = open('inputform.html', 'r').read()
 
 		return(htmlstring)
 
 	def RunCode(self,button,specf=None,save=None,directory=None,intsky=None,intsci=None,nframesci=None,nframesky=None,psffwhm=None,magnitude=None,spec=None,label=None,typef=None,v1_1=None,v1_2=None,v4=None,v5=None,v6=None,v7=None,v9=None,v10=None):
+		#clicking submit buttosn on home page instigates this code, depends on which button pressed
+		
+		#if start simulation button
 		if button=='start simulation':	
-			#if spectrum of previously uploaded file given make add temp to path name
+			##check that all parameters are given if not revert to defaults
+			
+			#if spectrum of previously uploaded file given, add 'temp' to path name
 			if spec:
 				spec=spec.split(',')
 				for i in arange(len(spec)):
@@ -50,12 +58,12 @@ class InputExample:
 			#check if a directory was added
 			if not directory:
 				return 'error: no directory added'
-
+			#if directory given already in use return error
 			if os.path.exists('../'+directory):
 				return 'Error: directory specified already exists pick another name'
 			else: os.makedirs('../'+directory+'/supplements')
 
-			#make sure have right number of parameters in each line of object stuff
+			#make sure have right number of parameters in each line of object stuff, if not return errors
 			num=len(label.split(','))
 			err=[]
 			if len(magnitude.split(','))!=num: err.append('magnitude')
@@ -74,11 +82,11 @@ class InputExample:
 				
 				return 'not all object parameters have the same number of entries as there are labels (effected parameters: '+err+')'
 			
-			
+			#start progress log
 			log=open('../'+directory+'/supplements/progress','a')
-			log.write('Setting up Simulation \n \n \n \n ')
+			log.write('Setting up Simulation \n ')
 	
-			#put 'save' data into useful form
+			#figure out which files were requested and put into form usable by code
 			initCubes=0
 			sumCube=0
 			skysci=0
@@ -94,22 +102,26 @@ class InputExample:
 					if save=='initCubes': initCubes=1 
 					if save=='sumCube': sumCube=1
 					if save=='skysci':skysci=1
-			
+			#star the simulation by running execute_sim with all of the nescissary files piped to it
 			subprocess.Popen(['ipython ../execute_sim.py '+str(initCubes)+' '+str(sumCube)+' '+str(skysci)+' '+directory+' '+intsky+' '+intsci+' '+nframesci+' '+nframesky+' '+psffwhm+' '+magnitude+' '+spec+' '+label+' '+typef+' '+v1_1+' '+v1_2+' '+v4+' '+v5+' '+v6+' '+v7+' '+v9+' '+v10], shell=True,stdin=None, stdout=None, stderr=None, close_fds=True) #opens in background doesn't wait to finish
-
+			
+			##present the check progress and download buttons, each links to the class of that name
 			return """<html><body><h2>Simulation started, check progress at:</h2><a href="progress?directory=%s">PROGESS</a><br />"""%directory +\
 				"""<h2>When Completed download files at:</h2><a href="download?directory=%s">DOWNLOAD</a><br />"""%directory
+		##if the upload files button pressed
 		if button=='upload files':
+			#make sure can deal with simultanious uploads by making into list
 			if type(specf)!=list:
 				temp=[]
 				temp.append(specf)
 				specf=temp
-			
+			#look at each element in list
 			for i in arange(len(specf)):
 				
 				#check if there is already a file with that name:
 				if os.path.exists('../object_spec/'+specf[i].filename):
 					return 'error, a spectrum already exists with that name, try again'
+				#save spectra to object_spec/temp
 				else:
 					temp=''
 					while True:
@@ -128,17 +140,21 @@ class InputExample:
 
 
 class progress:
-
+	#page went to if progress button pressed on submit page
     def index(self, directory):
+    	#look at porgress file
 	filename = '../'+directory+'/supplements/progress'
-
-   	p=subprocess.Popen(['tail','-n',str(5),filename], stdout=subprocess.PIPE)
-    	s,sinput=p.communicate()
-    	s=s.split('\n')
+	#bits used to display last few lines of progress log, instead show all
+   	#p=subprocess.Popen(['tail','-n',str(5),filename], stdout=subprocess.PIPE)
+    	#s,sinput=p.communicate()
+    	#s=s.split('\n')
+    	
+    	##read all of progress file and format each line such that it displays well 
 	with open(filename, "r") as f:
     		page = '<ul>%s</ul>' % "\n".join("%s<br/>" % line for line in f)
+    	##display contents of progress file
         return "<html><body><h2>Progress:</h2><br />"+page
-
+		###stuff from displaying last few lines
 		#"<html><body><h2>Progress:</h2><br />\n" + \
 		#"%(s0)s<br />\n"%{'s0':s[0]} +\
 		#"%(s1)s<br />\n"%{'s1':s[1]} +\
@@ -148,14 +164,16 @@ class progress:
 
 
     index.exposed = True
-
+#for downloading ones favorite spectrum to use in the simulator
 class download:
 	def index(self,directory):
+		#look for right file based on user input
 		filename='../'+directory+'/'+directory+'.tar'
+		#check if the tar file has been made yet, if so download it to user
 		if os.path.exists(filename):
 			filename=os.path.abspath(filename)
 			return serve_file(filename, "application/x-download", "attachment")
-			
+		#if not return error	
 		else: return 'Simulation Incomplete, try again later!'	
     	index.exposed = True
 
