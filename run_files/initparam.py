@@ -1,3 +1,6 @@
+###sets up the files necissary to run simulations
+###called by execute_sim.py. Uses parameters from basis_top.param and basis_end.param and values passed from execute_sim.py
+
 from numpy import *
 import sys
 import shutil
@@ -12,9 +15,9 @@ import pdb
 NUMCPUS=2
 psf = 'psf'
 
-
-#Get basis_top.param file -- Admin file holding file names/tags
+##this is the function called in execute_sim
 def constructParam(bparamname,directory,nruns,psffwhm,objectstuff,basicstuff,objectname,basicname,savestuff,savename):
+	##load the parameters from basis_top.param
 	bparam = imp.load_source('bparam',bparamname)
 	print bparam.PSPACE_FILE
 	pspacefile = bparam.PSPACE_FILE #Get user's parameter space file paramspace.param
@@ -37,37 +40,37 @@ def constructParam(bparamname,directory,nruns,psffwhm,objectstuff,basicstuff,obj
 
 	#num_fullcube, dum = generateParam(bparam, pspace, pspacename, createRun, pid = 0)
 
-	#create three lists from all combinations of basic parameters
+	###create three lists from all combinations of basic parameters to know conditions in each run
 	basisstuff=[]
 	for x in basicstuff[0]:
 		for y in basicstuff[1]:
 			for z in basicstuff[2]:
 				for w in basicstuff[3]:
 					basisstuff.append([x,y,z,w])
-
+	###set up files for each run
 	for i in range(nruns):
+		#run directory for that run
 		rundir = bparam.HOME+directory 
-		#make directories
+		#make run directory
+		os.makedirs(rundir+ str(i) + '/')
 		
-  		os.makedirs(rundir+ str(i) + '/')
-		
-		#make .param files
+		#make .param files for this run using functions defined later in this file
 		npsf=mkpsffile(rundir,psffwhm,bparam,i)
 		nobj=makeobjfile(rundir,objectstuff,objectname,bparam,i)
-		#steps per run:
+		#steps per run: (needed to display progress)
 		numsteps=((11*nobj)*npsf+4)*nruns
 		makebasisfile(rundir,basisstuff[i],basicname,bparam,directory,savestuff,savename,i)
 		#func_createPSF = lambda w, x, y, z: createPSF(w, x, y, z, rundir)
 		#num_psf, dum = generateParam(bparam, pspace_psf, 0, func_createPSF, pid = 0)
+		###make run.py for each run function defined later in this code
 		writeExecutionScript(bparam.BASIS_PREFIX+'.param', i, rundir,numsteps,nruns)
 	
 
-
+	#make run.script that automates running all runs from a given simulation command later this script gets called by execute_sim.py
 	outname = bparam.HOME+directory +'run.script'
 	outfile = open(outname, 'wb')
 	outfile.write('for ((i = 0; i < ' + str(nruns) + '; i++))\n')
 	outfile.write('do\n')
-#	outfile.write('\techo "HI EVERYONE $i"\n')
 	outfile.write('\tipython '+bparam.HOME+directory+'$i/run.py\n')
 	outfile.write('done\n')
 	outfile.write('echo "All Runs of Simulation Completed."\n')
@@ -76,42 +79,55 @@ def constructParam(bparamname,directory,nruns,psffwhm,objectstuff,basicstuff,obj
 
 
 
-#write psf.param files
+#write .param files:
+
+#do psf.param
 def mkpsffile(rundir,psffwhm,bparam,nim):
 	npsf=len(psffwhm)
+	#write one psf file for each psf fwhm specified 
 	for i in arange(len(psffwhm)):
+		#create psf_#.param file
 		pfile=open(rundir+ str(nim) + '/'+bparam.PSF_PREFIX+str(i)+bparam.TAIL,'w')
+		#write in the fwhm
 		pfile.write('PSF_FWHM'+'\t\t' + psffwhm[i] + '\n')
 		pfile.close()
+	#return how many psfs there are
 	return npsf
-
+#make object.param files
 def makeobjfile(rundir,objectstuff,objectname,bparam,num):
+	#since app.py made sure each opject parameter had the same number of terms just need to check one
 	nobj=len(objectstuff[0])
+	#make that many object_#.param files
 	for i in arange(len(objectstuff[0])):
 		ofile=open(rundir+ str(num) + '/'+bparam.OBJ_PREFIX+str(i)+bparam.TAIL,'w')
+		#write a line for each of the object parameters
 		for k in arange(len(objectstuff)):
 			ofile.write(objectname[k]+'\t\t'+objectstuff[k][i]+'\n')
 	return nobj
-
+	
+#make basis.param 
 def makebasisfile(rundir,basicstuff,basicname,bparam,directory,savestuff,savename,num):
 	outname=rundir+ str(num) + '/'+bparam.BASIS_PREFIX+bparam.TAIL
 	copyFile(bparam.BASIS_TOP_TEMPLATEFILE, outname)
 	basisoutfile = open(outname, 'a') #append
 	#Additional lines:
 
+	#write a line for each of the basis parameters given from execute_sim
 	for i in arange(len(basicstuff)):
 		basisoutfile.write(basicname[i]+'\t=\t'+basicstuff[i]+'\n')
 
+	#add some other entries that aren't in the basic stuff lists
 	basisoutfile.write('SKY_TRAN_FILE = HOME + \'sky/mktrans_zm_\' + SKY_TRAN + \'.dat\'\n')
 	basisoutfile.write('SKY_EM_FILE = HOME + \'sky/mk_skybg_zm_\' + SKY_EM + \'_ph.dat\'\n')
 
 	basisoutfile.write('PARAM\t=\t\''+directory+'\'\n')
 	basisoutfile.write('RUN_DIR\t=\t\''+rundir+ str(num) + '/'+'\'\n')
+	#write which files were selected to be saved
 	for i in arange(len(savename)):
 		basisoutfile.write(savename[i]+'\t=\t'+savestuff[i]+'\n')
 
 	basisoutfile.write('\n\n\n')
-
+	##add stuff from basis_end.py
 	infile = open(bparam.BASIS_END_TEMPLATEFILE, 'r')
 	for line in infile:
 		basisoutfile.write(line)
@@ -123,7 +139,6 @@ def makebasisfile(rundir,basicstuff,basicname,bparam,directory,savestuff,savenam
 
 
 #writeExecutionScript:
-#Description: The automated execution of GALINO is by shell script command. The command simply executes each generator run.py in each run folder. 
 #Here is a template of of each run.py file. 
 def writeExecutionScript(basisname, pid, rundir,numsteps,nruns):
 	basisfilename = rundir+str(pid)+'/'+basisname
