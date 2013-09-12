@@ -1,4 +1,4 @@
-#creates object class with all relevant info
+#deals with creating dictionary items and initial object data cube(s)
 
 from pylab import *
 import module as mod
@@ -10,7 +10,8 @@ from scipy.special import gammainc
 from spec_fix import *
 import pdb
 
-
+###creates the object class which holds dictionary items to be called later.
+###this class is called ty the impotObject and importThing functions defined bellow
 class Object:
 	def __init__(self,dic):
 		self.dic = dic
@@ -23,19 +24,39 @@ class Object:
 
 
 
-
+###function: importObject
+###input: basisfilename - filename of a parameter file
+###takes a parameter file and creats on object with each entry in that file callable as dictionary entries.
+###return 'object' class containing information from parameter file
 def importObject(basisfilename):
+	#uses module.py to create dictionary
 	basis_dict = mod.getBasisDictionary(basisfilename)
-
+	#creates object using that dictionary
 	object = Object(basis_dict)
 
 	return object
-
+###function: importThing (similar to importObject)
+###input: 	oid - number identifying which of the simulated objects this 'thing' represents
+###		object - the object class item created by importObject
+###return 'object' class containing info for that 'thing'
 def importThing(oid,object):
+	#string of the filename of the parameter file of the object number oid
 	obfile=object.RUN_DIR+object.OBJ_PREFIX+str(oid)+object.TAIL
+	#use module.py to create dictionary
 	obdict=mod.getDictionary(obfile)
+	#make object class out of dictionary
 	thing=Object(obdict)
 	return thing
+
+###function: makeCube
+###input:	object - thing created by importObject
+###		rundir - directory with simulation in it
+###		psfname - name of psf file being used for this image (can run multiple psfs in paralel)
+###		pid - psf number being used for this image
+###		thing - specific object in simulation being modeled in this image (all are later summed)
+###		oid - number of the specific object being modeled
+###		trackprog - step number used for the progress log file
+###output: object data cube and updated trackprog value
 
 def makeCube(Object,rundir,psfname,pid,thing,oid,trackprog): #make galaxy model in galfit, how to fit spectum to it????????????????
 	log=open(Object.HOME+Object.PARAM+'supplements/progress','a')
@@ -241,7 +262,9 @@ def makeCube(Object,rundir,psfname,pid,thing,oid,trackprog): #make galaxy model 
 			print 'object: failed filename. Cannot save.'
 
 	return cube,trackprog
-
+	
+###caled by makeCube to create galfit template file
+###returns masks of the FOV on the galfit image, the ellips making the object out to defined radius and the pixel scale of the galfit image
 def makeTemplate(Object,thing,rundir):
 
 	#size of model pixels in arcsecs
@@ -335,10 +358,15 @@ def makeTemplate(Object,thing,rundir):
 	
 	return mFOV,mellipse,s
 
+###function: constructPSF (called by makeCube)
+###imputs:	img - image to apply psf over
+###		psfname - file name of psf parameter file
+###		object -object with useful dictionary terms
+###returns image with psf applied and psf dictionary
 def constructPSF(img,psfname,Object):
 	#start = time()
 
-
+	#get psf dictionary
 	psf_dict = mod.getDictionary(psfname)
 #	PSF_NSAMPLE = psf_dict['PSF_NSAMPLE']
 #	PSF_XSIZE = psf_dict['PSF_XSIZE']
@@ -352,6 +380,11 @@ def constructPSF(img,psfname,Object):
 	
 	return psfcube,psf_dict
 
+###function: applyCubePSF (called by constructPSF)
+###inputs:	img - to be convolved with psf
+###		fwhm - of psf
+###		object
+###returns convolved image
 def applyCubePSF(img, fwhm,Object):
 
 	dx = Object.SLICE
