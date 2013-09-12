@@ -1,3 +1,6 @@
+###writen by Stephen Ro for Galino
+###makes dictionaries from .param files
+
 from scipy import integrate
 from scipy.special import erf
 from scipy import ndimage
