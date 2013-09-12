@@ -15,7 +15,18 @@ import pdb
 NUMCPUS=2
 psf = 'psf'
 
-##this is the function called in execute_sim
+##this is the function called in execute_sim, sets up simulation
+##inputs: 	bparamname - name of the basis file (basis_top.param in WIFIS case)
+##		directory - name of directory to do simulation in
+##		nrungs - based on input how many runs will be done
+##		psffwhm - self explanitory
+##		objectstuff - a list containing the values of all the object parameters
+##		basicstuff - a list containing th values of all the gneral simulation parameteters
+##		objectname - a list containing the names of all the object parameters
+##		basicname - a list containing the names of all the basic parameters
+##		savestuff - boolians saying if certain files should be saved
+##		savename - the name of each file associated with savestuff number
+## goes through and creats a bunch of directories and populated them with parameter files and run.py files which it writes.
 def constructParam(bparamname,directory,nruns,psffwhm,objectstuff,basicstuff,objectname,basicname,savestuff,savename):
 	##load the parameters from basis_top.param
 	bparam = imp.load_source('bparam',bparamname)
@@ -81,7 +92,12 @@ def constructParam(bparamname,directory,nruns,psffwhm,objectstuff,basicstuff,obj
 
 #write .param files:
 
-#do psf.param
+#do psf.param, called by constructParam
+#inputs: 	rundir
+#		psffwhm
+#		bparam - dictionary of important stucc
+#		nim - run number
+#return: how many psf (number)
 def mkpsffile(rundir,psffwhm,bparam,nim):
 	npsf=len(psffwhm)
 	#write one psf file for each psf fwhm specified 
@@ -93,7 +109,13 @@ def mkpsffile(rundir,psffwhm,bparam,nim):
 		pfile.close()
 	#return how many psfs there are
 	return npsf
-#make object.param files
+#make object.param files called by constructParam
+#inputs:	rundir
+#		objectstuff (see constructParam)
+#		objectname (see constructParam)
+#		bparam - dictionary of important stuff
+#		num - run number
+#returns how many objects there are
 def makeobjfile(rundir,objectstuff,objectname,bparam,num):
 	#since app.py made sure each opject parameter had the same number of terms just need to check one
 	nobj=len(objectstuff[0])
@@ -105,9 +127,20 @@ def makeobjfile(rundir,objectstuff,objectname,bparam,num):
 			ofile.write(objectname[k]+'\t\t'+objectstuff[k][i]+'\n')
 	return nobj
 	
-#make basis.param 
+#make basis.param called by constructParam
+#imputs:	rundir
+#		basicstuff (see constructParam)
+#		basicname (see constructParam)
+#		bparam
+#		dirtory - where simulation running
+#		savestuff (see constructParam)
+#		savename (see constructParam)
+# 		num - run number
+
 def makebasisfile(rundir,basicstuff,basicname,bparam,directory,savestuff,savename,num):
+	#construct name of basis.param file
 	outname=rundir+ str(num) + '/'+bparam.BASIS_PREFIX+bparam.TAIL
+	#put contents of basis_top.param into each basis.param
 	copyFile(bparam.BASIS_TOP_TEMPLATEFILE, outname)
 	basisoutfile = open(outname, 'a') #append
 	#Additional lines:
@@ -138,8 +171,14 @@ def makebasisfile(rundir,basicstuff,basicname,bparam,directory,savestuff,savenam
 
 
 
-#writeExecutionScript:
+#writeExecutionScript: called by construcParam
 #Here is a template of of each run.py file. 
+#inputs: 	basisname - name of basic parameter folder
+#		pid - run number
+#		rundir - directory where run is
+#		numsteps - total number of steps in simulation
+#		nruns - number of runs in this group
+#no returns
 def writeExecutionScript(basisname, pid, rundir,numsteps,nruns):
 	basisfilename = rundir+str(pid)+'/'+basisname
 	basis_dict = mod.getBasisDictionary(basisfilename)
@@ -238,7 +277,7 @@ def writeExecutionScript(basisname, pid, rundir,numsteps,nruns):
 	outfile.write('\tlog=open(\''+rundir+'supplements/progress\',\'a\')\n')
 	outfile.write('\tlog.write(\'WARNING! An Error Occured(\'+str(error)+\'\\n\')\n') 
 
-def copyFile(inname, outname):
+def copyFile(inname, outname): #used by makebasisfile
 	shutil.copyfile(inname,outname)
 
 
