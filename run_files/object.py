@@ -79,7 +79,7 @@ def makeCube(Object,rundir,psfname,pid,thing,oid,trackprog): #make galaxy model 
 	model=py.getdata(rundir+'galfit_model.fits') #units are electrons/s (totalled over all wavelength range??)
 	model=swapaxes(model,0,1)
 
-	NX=Object.NX/2	#make one x pixel per slice will be spread into two in rescale.py
+	NX=Object.NX/2	#make one x pixel per slice will be spread into two later
 	NY=Object.NY
 	NZ=Object.NZ
 
