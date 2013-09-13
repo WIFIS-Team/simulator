@@ -1,4 +1,4 @@
-#functions used to convolve in spectral direction (blur as well??)
+#functions used to convolve in spectral direction used by object.py and sky.py, closely based off functions writen by Stephen Ro
 from numpy import *
 import module as mod
 import scipy
@@ -6,6 +6,13 @@ from scipy import ndimage
 from scipy.special import erf
 from scipy import ndimage
 
+#function ConvolveSpec - convolve spectra to right resolution
+#inputs:	spec - spectrum to be convolved, can be any size array, axis to be convolved on (spectral defined later)
+#		nx - number of pixels
+#		dwidth - lenght of pixel in nm
+#		sigma - standard deviation in nm
+#		asisn - axis to convolve over defualts to the last axis
+#returns convolved spectrum
 
 def convolveSpec(spec, nx, dwidth, sigma,axisn=-1):
 	#axis shows which axis to convolve on
@@ -17,7 +24,12 @@ def convolveSpec(spec, nx, dwidth, sigma,axisn=-1):
         kernel = normal_weight(l, 0.0, sigma, dwidth)
         spec = scipy.ndimage.filters.convolve1d(spec, kernel, axis=axisn, mode = 'mirror')
         return spec
-
+#function: normal_weight , creates guassian psf kernel (uses error functions)
+#inputs:	l - length of kernel found in convolveSpec
+#		mu - mean
+#		sigma - standard deviation
+#		dz - size of pixel
+#returns normalized guassian kernel
 def normal_weight(l, mu, sigma, dz):
 	
         #dz is the step size
