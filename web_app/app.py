@@ -17,8 +17,8 @@ class InputExample:
 
 	def index ( self ):
 		##home page, lets user set up conditions for simulation
-                # Read in HTML form code from file
-                htmlstring = open('inputform.html', 'r').read()
+		# Read in HTML form code from file
+		htmlstring = open('inputform.html', 'r').read()
 
 		return(htmlstring)
 
@@ -141,19 +141,19 @@ class InputExample:
 
 class progress:
 	#page went to if progress button pressed on submit page
-    def index(self, directory):
-    	#look at porgress file
-	filename = '../'+directory+'/supplements/progress'
-	#bits used to display last few lines of progress log, instead show all
-   	#p=subprocess.Popen(['tail','-n',str(5),filename], stdout=subprocess.PIPE)
-    	#s,sinput=p.communicate()
-    	#s=s.split('\n')
+	def index(self, directory):
+		#look at porgress file
+		filename = '../'+directory+'/supplements/progress'
+		#bits used to display last few lines of progress log, instead show all
+		#p=subprocess.Popen(['tail','-n',str(5),filename], stdout=subprocess.PIPE)
+		#s,sinput=p.communicate()
+		#s=s.split('\n')
     	
-    	##read all of progress file and format each line such that it displays well 
-	with open(filename, "r") as f:
-    		page = '<ul>%s</ul>' % "\n".join("%s<br/>" % line for line in f)
-    	##display contents of progress file
-        return "<html><body><h2>Progress:</h2><br />"+page
+		##read all of progress file and format each line such that it displays well 
+		with open(filename, "r") as f:
+			page = '<ul>%s</ul>' % "\n".join("%s<br/>" % line for line in f)
+		##display contents of progress file
+		return "<html><body><h2>Progress:</h2><br />"+page
 		###stuff from displaying last few lines
 		#"<html><body><h2>Progress:</h2><br />\n" + \
 		#"%(s0)s<br />\n"%{'s0':s[0]} +\
@@ -163,7 +163,7 @@ class progress:
 		#"%(s4)s<br />\n"%{'s4':s[4]}
 
 
-    index.exposed = True
+	index.exposed = True
 #for downloading ones favorite spectrum to use in the simulator
 class download:
 	def index(self,directory):
@@ -175,7 +175,7 @@ class download:
 			return serve_file(filename, "application/x-download", "attachment")
 		#if not return error	
 		else: return 'Simulation Incomplete, try again later!'	
-    	index.exposed = True
+	index.exposed = True
 
 
 if __name__ == '__main__':
