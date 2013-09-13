@@ -1,3 +1,5 @@
+###Final portion of simulator. Adds noise to the science and sky frames and sky subtracts to get final science image
+
 from numpy import *
 
 import datacube
@@ -8,7 +10,13 @@ from time import time
 import pyfits as py
 import pdb
 
-
+###only function in the code, takes science and sky images and returns final sky subtracted image with noise.
+###inputs:	cube - science data cube with ideal image taking into account sky transmission optical throughut and QE, e-/s
+###		skySpectrum - 1d array with sky flux values with optical throughput and QE applies at the right resolution and pixel scale
+###		object - holds basic parameters
+###		fileprefix - path name as a string used to save fits files
+###		pid - psf number of this simulation
+###returns: none, does save various fits files depending on initial parameters given. Always saves final sky subtracted image.
 def ApplyNoise(cube, skySpectrum, object,  fileprefix, pid):
 	start = time()
 
