@@ -342,4 +342,3 @@ def doAnalysis(path,directory,numruns):
 #		savefig(rundir+runnum+'final_img.png')
 
 #show()
-
