@@ -6,6 +6,8 @@ import cherrypy
 import glob
 import os.path
 import os
+import re
+import glob
 import sys
 from numpy import *
 import linecache
@@ -87,27 +89,28 @@ class InputExample:
 			log.write('Setting up Simulation \n ')
 	
 			#figure out which files were requested and put into form usable by code
-			initCubes=0
-			sumCube=0
-			skysci=0
-			if save:
-				if size(array(save))>=2:
-					save=array(save)
-					for s in save:
-						if s=='initCubes': initCubes=1 
-						if s=='sumCube': sumCube=1
-						if s=='skysci': skysci=1
+			initCubes=1
+			sumCube=1
+			skysci=1
+			#if save:
+			#	if size(array(save))>=2:
+			#		save=array(save)
+			#		for s in save:
+			#			if s=='initCubes': initCubes=1 
+			#			if s=='sumCube': sumCube=1
+			#			if s=='skysci': skysci=1
 					
-				else: 
-					if save=='initCubes': initCubes=1 
-					if save=='sumCube': sumCube=1
-					if save=='skysci':skysci=1
+			#	else: 
+			#		if save=='initCubes': initCubes=1 
+			#		if save=='sumCube': sumCube=1
+			#		if save=='skysci':skysci=1
 			#star the simulation by running execute_sim with all of the nescissary files piped to it
 			subprocess.Popen(['ipython ../execute_sim.py '+str(initCubes)+' '+str(sumCube)+' '+str(skysci)+' '+directory+' '+intsky+' '+intsci+' '+nframesci+' '+nframesky+' '+psffwhm+' '+magnitude+' '+spec+' '+label+' '+typef+' '+v1_1+' '+v1_2+' '+v4+' '+v5+' '+v6+' '+v7+' '+v9+' '+v10], shell=True,stdin=None, stdout=None, stderr=None, close_fds=True) #opens in background doesn't wait to finish
 			
 			##present the check progress and download buttons, each links to the class of that name
 			return """<html><body><h2>Simulation started, check progress at:</h2><a href="progress?directory=%s">PROGESS</a><br />"""%directory +\
-				"""<h2>When Completed download files at:</h2><a href="download?directory=%s">DOWNLOAD</a><br />"""%directory
+				"""<h2>When Completed, view results at : </h2><a href="showResults?directory=%s">Results</a><br />"""%directory
+#"""<h2>When Completed download files at:</h2><a href="download?directory=%s">DOWNLOAD</a><br />"""%directory
 		##if the upload files button pressed
 		if button=='upload files':
 			#make sure can deal with simultanious uploads by making into list
@@ -177,12 +180,50 @@ class download:
 		else: return 'Simulation Incomplete, try again later!'	
 	index.exposed = True
 
+class showResults:
+	def index(self,directory):
+		#need to look in each run folder
+		files=os.listdir('../'+directory)
+		#make into single string
+		files=','.join(files)
+		#find numbers since these are runs
+		files=re.findall(r'[0-9]',files)
+		#blank html to return
+		html='<html><body>'
+		#find png's in each run file make into list
+
+		for x in files:
+			x=str(x)
+			html=html+'<h2> Results from run %s </h2>'%x
+
+			imgs=glob.glob('../'+directory+'/'+x+'/*.png')
+			for img in imgs:
+				img=str(img)
+				
+				subprocess.call(['cp',img,'./images'])
+				img=img.split('/')
+				
+				html=html+'<img src="images/%s" >'%img[-1]
+			
+			
+
+		html=html+'<br/>'
+		print html
+		return html #"""<img src='images/final_img.png'>"""
+	index.exposed= True
+
+
+#for miranda
+conf = {'/showResults/images': {'tools.staticdir.on': True,
+        'tools.staticdir.dir': '/home/miranda/files/GitHub_files/wifis_simulator/web_app/images'}}
 
 if __name__ == '__main__':
 	root = InputExample()
 	root.progress=progress()
 	root.download=download()
-	cherrypy.quickstart(root)
+	root.showResults=showResults()
+
+	cherrypy.quickstart(root, '/', config=conf)
 
 
 

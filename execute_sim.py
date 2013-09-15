@@ -8,7 +8,8 @@ import subprocess
 import pdb
 
 ###primary running directory
-pathname='/Users/suresh/Source/wifis_simulator/' #string
+#pathname='/Users/suresh/Source/wifis_simulator/' #string
+pathname='/home/miranda/files/GitHub_files/wifis_simulator/' #for miranda's computer ;)
 
 ##make change current path to run_files directory (needed to run initparam.py
 path=os.path.abspath(pathname+'run_files/')
@@ -51,11 +52,9 @@ log=open(pathname+directory+'/supplements/progress', "a")
 ###run run.script, does all the runs set up by initparam)
 subprocess.call([pathname+directory+'/run.script'],shell=1,executable='/bin/bash')
 
-#write done message to progress log
-log.write('All Simulations Complete, files now available for download')
 
 #delete files that we don't want to pass to the user (python codes, parameter files, run script . . .)
-subprocess.Popen(['find '+pathname+directory+'/ -type f \( -name "*.param" -o -name "*.py" -o -name "*.script" -o -name "*.paramc" \) -delete'],shell=1,executable='/bin/bash')
+#subprocess.Popen(['find '+pathname+directory+'/ -type f \( -name "*.param" -o -name "*.py" -o -name "*.script" -o -name "*.paramc" \) -delete'],shell=1,executable='/bin/bash')
 
 #change active path out of run_files
 path=os.path.abspath(pathname+'/')
@@ -63,6 +62,19 @@ sys.path.append(path)
 
 #tar the directory that the simulations were in so the user can download it
 subprocess.call(['tar','-cvf',pathname+directory+'/'+directory+'.tar', '../'+directory+'/'])
+
+#do analysis and save images
+#go to right dir
+path=os.path.abspath(pathname+'analysis/')
+sys.path.append(path)
+#import code
+from analysis import *
+
+#do it
+doAnalysis(pathname,directory,nruns)
+
+#write done message to progress log
+log.write('All Simulations Complete, files now available for download')
 
 
 

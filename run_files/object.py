@@ -7,6 +7,7 @@ import subprocess
 import pyfits as py
 from scipy.interpolate import interp1d
 from scipy.special import gammainc
+from scipy.signal import fftconvolve
 from spec_fix import *
 import pdb
 
@@ -70,6 +71,7 @@ def makeCube(Object,rundir,psfname,pid,thing,oid,trackprog): #make galaxy model 
 	log.write( '\trun galfit. Step '+str(trackprog[0])+' of '+str(trackprog[1])+' \n')
 	trackprog[0]+=1
 	##run galfit
+
 	with open(Object.HOME+Object.PARAM+'supplements/galfit_output', "a") as outfile:
     		subprocess.call([Object.GALFIT,rundir+'galfit_template'], stdout=outfile)
 	
@@ -407,8 +409,8 @@ def applyCubePSF(img, fwhm,Object):
 
 	psf=array(outer(normal_weight(lx,0.0,sigmax,dx), normal_weight(ly,0.0,sigmay,dy)))
 	
-	img = scipy.signal.fftconvolve(img, psf,mode='same')
-
+	img = fftconvolve(img, psf,mode='same')
+	
 	return img
 
 	
