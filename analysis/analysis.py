@@ -329,16 +329,16 @@ def doAnalysis(path,directory,numruns):
 
 ######################
 ###show final image summed over all wavelelngths with apeture overlayed
-#		figure(figsize=(8, 3))
-#		sub=swapaxes(py.getdata(rundir+runnum+'noise_psf_0.fits'),0,-1)
-#		sub=sum(sub,axis=2)
+		figure(figsize=(8, 3))
+		sub=swapaxes(py.getdata(rundir+runnum+'noise_psf_0.fits'),0,-1)
+		sub=sum(sub,axis=2)
 
-#		edge=(edgex,edgey)
-#		sub[edge]=amax(sub)+5
-#		edge2=(edgex,edgey+int(shift))
-#		sub[edge2]=amax(sub)+5
-#		imshow(sub,interpolation='none',cmap='gray')
+		edge=(edgex,edgey)
+		sub[edge]=amax(sub)+5
+		edge2=(edgex,edgey+int(shift))
+		sub[edge2]=amax(sub)+5
+		imshow(sub,interpolation='none',cmap='gray')
 
-#		savefig(rundir+runnum+'final_img.png')
+		savefig(rundir+runnum+'final_img.png')
 
 #show()
