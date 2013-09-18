@@ -109,8 +109,8 @@ class InputExample:
 			
 			##present the check progress and download buttons, each links to the class of that name
 			return """<html><body><h2>Simulation started, check progress at:</h2><a href="progress?directory=%s">PROGESS</a><br />"""%directory +\
-				"""<h2>When Completed, view results at : </h2><a href="showResults?directory=%s">Results</a><br />"""%directory
-#"""<h2>When Completed download files at:</h2><a href="download?directory=%s">DOWNLOAD</a><br />"""%directory
+				"""<h2>When Completed, view results at : </h2><a href="showResults?directory=%s">RESULTS</a><br />"""%directory +\
+				"""<h2>Or download flux calibrated FITS file(s) at:</h2><a href="download?directory=%s">DOWNLOAD</a><br />"""%directory
 		##if the upload files button pressed
 		if button=='upload files':
 			#make sure can deal with simultanious uploads by making into list
