@@ -105,7 +105,7 @@ class InputExample:
 			#		if save=='sumCube': sumCube=1
 			#		if save=='skysci':skysci=1
 			#star the simulation by running execute_sim with all of the nescissary files piped to it
-			subprocess.Popen(['ipython ../execute_sim.py '+str(initCubes)+' '+str(sumCube)+' '+str(skysci)+' '+directory+' '+intsky+' '+intsci+' '+nframesci+' '+nframesky+' '+psffwhm+' '+magnitude+' '+spec+' '+label+' '+typef+' '+v1_1+' '+v1_2+' '+v4+' '+v5+' '+v6+' '+v7+' '+v9+' '+v10], shell=True,stdin=None, stdout=None, stderr=None, close_fds=True) #opens in background doesn't wait to finish
+			subprocess.Popen(['ipython ../execute_sim.py '+str(initCubes)+' '+str(sumCube)+' '+str(skysci)+' '+directory+' '+intsky+' '+intsci+' '+nframesci+' '+nframesky+' '+psffwhm+' \''+magnitude+'\' '+spec+' '+label+' '+typef+' \' '+v1_1+'\' \' '+v1_2+'\' \' '+v4+'\' \' '+v5+'\' \' '+v6+'\' \' '+v7+'\' \' '+v9+'\' \' '+v10+'\''], shell=True,stdin=None, stdout=None, stderr=None, close_fds=True) #opens in background doesn't wait to finish
 			
 			##present the check progress and download buttons, each links to the class of that name
 			return """<html><body><h2>Simulation started, check progress at:</h2><a href="progress?directory=%s">PROGESS</a><br />"""%directory +\
