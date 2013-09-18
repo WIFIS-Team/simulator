@@ -60,8 +60,13 @@ subprocess.call([pathname+directory+'/run.script'],shell=1,executable='/bin/bash
 path=os.path.abspath(pathname+'/')
 sys.path.append(path)
 
-#tar the directory that the simulations were in so the user can download it
-subprocess.call(['tar','-cvf',pathname+directory+'/'+directory+'.tar', '../'+directory+'/'])
+#make results directory
+
+os.makedirs('../'+directory+'/results')
+
+
+#subprocess.Popen(['find '+pathname+directory+' -name \'spectrum_theory*.fits\' -exec cp {} '+pathname+directory+'/results \\;'],shell=1,executable='/bin/bash')
+
 
 #do analysis and save images
 #go to right dir
@@ -72,6 +77,9 @@ from analysis import *
 
 #do it
 doAnalysis(pathname,directory,nruns)
+
+#tar the directory that the simulations were in so the user can download it
+subprocess.call(['tar','-cvf',pathname+directory+'/'+directory+'.tar', '../'+directory+'/results/'])
 
 #write done message to progress log
 log.write('All Simulations Complete, files now available for download')

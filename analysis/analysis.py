@@ -25,6 +25,7 @@ def doAnalysis(path,directory,numruns):
 	rundir=path+directory+'/'
 #loop over all run numbers want to annalyze (string with /) 
 	for runnum in arange(numruns):
+		run=str(runnum)
 		runnum=str(runnum)+'/'
 
 #make class object to hold all the infos
@@ -126,7 +127,7 @@ def doAnalysis(path,directory,numruns):
 		img/=(array(tn))[newaxis,:]
 		img/=col 
 	        hdu[0].data=swapaxes(img,0,-1)
-		hdu.writeto(rundir+runnum+'spectrum_theory.fits')
+		hdu.writeto(rundir+'results/spectrum_theory_'+run+'.fits')
 
 		i=0
 		thing=('Centre', 'Edge')
