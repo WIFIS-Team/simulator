@@ -9,7 +9,8 @@ import pdb
 
 ###primary running directory
 #pathname='/Users/suresh/Source/wifis_simulator/' #string
-pathname='/home/miranda/files/GitHub_files/wifis_simulator/' #for miranda's computer ;)
+#pathname='/home/miranda/files/GitHub_files/wifis_simulator/' #for miranda's computer ;)
+pathname='/Users/miranda/Public/wifis_simulator/'
 
 ##make change current path to run_files directory (needed to run initparam.py
 path=os.path.abspath(pathname+'run_files/')
@@ -48,9 +49,9 @@ import initparam
 initparam.constructParam(pathname+'basis_top.param',directory,nruns,psffwhm,objectstuff,basicstuff,objectname,basicname,savestuff,savename) ##will need to take in the directory name as well will also need to work out how many runs from user input, how many psf's too? maybe later don't want to write psf.param files so how to figure out how many times to do it with what values
 
 ##open the progress log
-log=open(pathname+directory+'/supplements/progress', "a")
+log=open(pathname+'runs/'+directory+'/supplements/progress', "a")
 ###run run.script, does all the runs set up by initparam)
-subprocess.call([pathname+directory+'/run.script'],shell=1,executable='/bin/bash')
+subprocess.call([pathname+'runs/'+directory+'/run.script'],shell=1,executable='/bin/bash')
 
 
 #delete files that we don't want to pass to the user (python codes, parameter files, run script . . .)
@@ -62,10 +63,10 @@ sys.path.append(path)
 
 #make results directory
 
-os.makedirs('../'+directory+'/results')
+os.makedirs('../runs/'+directory+'/results')
 
 
-#subprocess.Popen(['find '+pathname+directory+' -name \'spectrum_theory*.fits\' -exec cp {} '+pathname+directory+'/results \\;'],shell=1,executable='/bin/bash')
+subprocess.Popen(['find '+pathname+'runs/'+directory+' -name \'sky_*.fits\' -exec cp {} '+pathname+'runs/'+directory+'/results \\;'],shell=1,executable='/bin/bash')
 
 
 #do analysis and save images
@@ -76,10 +77,10 @@ sys.path.append(path)
 from analysis import *
 
 #do it
-doAnalysis(pathname,directory,nruns)
+doAnalysis(pathname+'runs/',directory,nruns)
 
 #tar the directory that the simulations were in so the user can download it
-subprocess.call(['tar','-cvf',pathname+directory+'/'+directory+'.tar', '../'+directory+'/results/'])
+subprocess.call(['tar','-cvf',pathname+'runs/'+directory+'/'+directory+'.tar', '../runs/'+directory+'/results/'])
 
 #write done message to progress log
 log.write('All Simulations Complete, files now available for download')

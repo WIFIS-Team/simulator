@@ -1,9 +1,10 @@
 #HOME = '/Users/suresh/Source/wifis_simulator/' #string
-HOME = '/home/miranda/files/GitHub_files/wifis_simulator/' #for miranda's computer
+#HOME = '/home/miranda/files/GitHub_files/wifis_simulator/' #for miranda's computer
+HOME = '/Users/miranda/Public/wifis_simulator/'
 
 #PARAM = 'spiral/' #name of directory to save runs in
 #GALFIT = '/Users/suresh/bin/galfit' #location of galfit executible file (aliases don't work)
-GALFIT = '/home/miranda/files/galaxyspec/galfit' #on miranda's machinex
+GALFIT = '/Users/miranda/Public/wifis_simulator/bin/galfit' #on miranda's machinex
 
 #Save/Inclusion of additional effects-parameters:
 #SAVE_OBJCUBE =	1 	#save initially created object cubes (one per componant)
@@ -13,7 +14,7 @@ GALFIT = '/home/miranda/files/galaxyspec/galfit' #on miranda's machinex
 ################################################################################################################
 ######probably won't have to change these:
 
-OBJECT_FILE =			HOME + 'object_spec/' #location of dir to keep all object spectra files in 
+OBJECT_FILE =			HOME + 'Object_spec/' #location of dir to keep all object spectra files in 
 
 PSPACE_FILE = 			HOME + 'paramspace.param'
 
@@ -23,7 +24,7 @@ BASIS_END_TEMPLATEFILE =	HOME + 'basis_end.param'
 TAIL = '.param'
 OBJ_PREFIX='object_'     #use to identify each of the objects in paramsapace.param
 
-THROUGHPUT_FILE =		HOME + 'through/throughput.dat'	
+THROUGHPUT_FILE =		HOME + 'through/throughput_mir.dat'	
 
 BASIS_PREFIX = 'basis'
 PSF_PREFIX = 'psf_'

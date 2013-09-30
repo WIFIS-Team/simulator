@@ -61,9 +61,9 @@ class InputExample:
 			if not directory:
 				return 'error: no directory added'
 			#if directory given already in use return error
-			if os.path.exists('../'+directory):
+			if os.path.exists('../runs/'+directory):
 				return 'Error: directory specified already exists pick another name'
-			else: os.makedirs('../'+directory+'/supplements')
+			else: os.makedirs('../runs/'+directory+'/supplements')
 
 			#make sure have right number of parameters in each line of object stuff, if not return errors
 			num=len(label.split(','))
@@ -85,7 +85,7 @@ class InputExample:
 				return 'not all object parameters have the same number of entries as there are labels (effected parameters: '+err+')'
 			
 			#start progress log
-			log=open('../'+directory+'/supplements/progress','a')
+			log=open('../runs/'+directory+'/supplements/progress','a')
 			log.write('Setting up Simulation \n ')
 	
 			#figure out which files were requested and put into form usable by code
@@ -146,7 +146,7 @@ class progress:
 	#page went to if progress button pressed on submit page
 	def index(self, directory):
 		#look at porgress file
-		filename = '../'+directory+'/supplements/progress'
+		filename = '../runs/'+directory+'/supplements/progress'
 		#bits used to display last few lines of progress log, instead show all
 		#p=subprocess.Popen(['tail','-n',str(5),filename], stdout=subprocess.PIPE)
 		#s,sinput=p.communicate()
@@ -171,7 +171,7 @@ class progress:
 class download:
 	def index(self,directory):
 		#look for right file based on user input
-		filename='../'+directory+'/'+directory+'.tar'
+		filename='../runs/'+directory+'/'+directory+'.tar'
 		#check if the tar file has been made yet, if so download it to user
 		if os.path.exists(filename):
 			filename=os.path.abspath(filename)
@@ -183,7 +183,7 @@ class download:
 class showResults:
 	def index(self,directory):
 		#need to look in each run folder
-		files=os.listdir('../'+directory)
+		files=os.listdir('../runs/'+directory)
 		#make into single string
 		files=','.join(files)
 		#find numbers since these are runs
@@ -196,7 +196,7 @@ class showResults:
 			x=str(x)
 			html=html+'<h2> Results from run %s </h2>'%x
 
-			imgs=glob.glob('../'+directory+'/'+x+'/*.png')
+			imgs=glob.glob('../runs/'+directory+'/'+x+'/*.png')
 			for img in imgs:
 				img=str(img)
 				
@@ -215,7 +215,9 @@ class showResults:
 
 #for miranda
 conf = {'/showResults/images': {'tools.staticdir.on': True,
-        'tools.staticdir.dir': '/home/miranda/files/GitHub_files/wifis_simulator/web_app/images'}}
+        'tools.staticdir.dir': '/Users/miranda/Public/wifis_simulator/web_app/images'}}
+
+cherrypy.server.socket_host = '0.0.0.0'
 
 if __name__ == '__main__':
 	root = InputExample()

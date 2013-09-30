@@ -61,7 +61,7 @@ def constructParam(bparamname,directory,nruns,psffwhm,objectstuff,basicstuff,obj
 	###set up files for each run
 	for i in range(nruns):
 		#run directory for that run
-		rundir = bparam.HOME+directory 
+		rundir = bparam.HOME+'runs/'+directory 
 		#make run directory
 		os.makedirs(rundir+ str(i) + '/')
 		
@@ -78,11 +78,11 @@ def constructParam(bparamname,directory,nruns,psffwhm,objectstuff,basicstuff,obj
 	
 
 	#make run.script that automates running all runs from a given simulation command later this script gets called by execute_sim.py
-	outname = bparam.HOME+directory +'run.script'
+	outname = bparam.HOME+'runs/'+directory +'run.script'
 	outfile = open(outname, 'wb')
 	outfile.write('for ((i = 0; i < ' + str(nruns) + '; i++))\n')
 	outfile.write('do\n')
-	outfile.write('\tipython '+bparam.HOME+directory+'$i/run.py\n')
+	outfile.write('\tipython '+bparam.HOME+'runs/'+directory+'$i/run.py\n')
 	outfile.write('done\n')
 	outfile.write('echo "All Runs of Simulation Completed."\n')
 	outfile.close()
@@ -153,7 +153,7 @@ def makebasisfile(rundir,basicstuff,basicname,bparam,directory,savestuff,savenam
 	basisoutfile.write('SKY_TRAN_FILE = HOME + \'sky/mktrans_zm_\' + SKY_TRAN + \'.dat\'\n')
 	basisoutfile.write('SKY_EM_FILE = HOME + \'sky/mk_skybg_zm_\' + SKY_EM + \'_ph.dat\'\n')
 
-	basisoutfile.write('PARAM\t=\t\''+directory+'\'\n')
+	basisoutfile.write('PARAM\t=\t\'runs/'+directory+'\'\n')
 	basisoutfile.write('RUN_DIR\t=\t\''+rundir+ str(num) + '/'+'\'\n')
 	#write which files were selected to be saved
 	for i in arange(len(savename)):
